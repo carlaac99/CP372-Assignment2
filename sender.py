@@ -9,8 +9,8 @@ import sys
 class sender:
     ACK = 0
     RTT = 20
-    #currentSeqNum
-    #currentPacket
+    currentSeqNum = 0
+    currentPacket = None
     
     def isCorrupted (self, packet):
         #  Check if a received packet (ACK) has been corrupted during transmission.
@@ -26,6 +26,8 @@ class sender:
         #generate the next sequence number to be used
         #similar to the corresponding function in receiver side
  
+        self.currentSeqNum += 1
+
         return 
 
     def __init__(self, entityName, ns):
@@ -49,6 +51,10 @@ class sender:
         #call utdSend
         #start the timer
         #you must ignore the message if there is one packet in transit
+        
+        self.checksum = checksumCalc(message)
+        self.payload = message
+
         return
  
     

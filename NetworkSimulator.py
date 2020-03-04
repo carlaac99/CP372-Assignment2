@@ -6,7 +6,7 @@ Created on Feb 24, 2020
 #from Random import *
 import random 
 import sys
-from common import *
+from common import * 
 from sender import *
 from receiver import *
 import copy
@@ -17,17 +17,17 @@ class NetworkSimulator:
 
     
     def initSimulator(self, maxMsgs, loss, corrupt, delay, seed, trace):
-        self.maxMessages = maxMsgs;
+        self.maxMessages = maxMsgs
     
-        self.lossProb = loss;
-        self.corruptProb = corrupt;
+        self.lossProb = loss
+        self.corruptProb = corrupt
     
-        self.avgMessageDelay = delay;
+        self.avgMessageDelay = delay
     
-        self.rand = random.seed(seed);        # instantiate Random number generator with provided seed
+        random.seed(seed)        # instantiate Random number generator with provided seed
     
-        self.nMsgSim = 0;                       # initialise number of simulated messages to 0
-        self.time = 0.0;                        # initialise simulation time to 0
+        self.nMsgSim = 0                      # initialise number of simulated messages to 0
+        self.time = 0.0                        # initialise simulation time to 0
 
         self.trace = trace
     
@@ -59,7 +59,7 @@ class NetworkSimulator:
         #Begin the main simulation loop
         while True: 
             # Get the next (with respect to the scheduled time) event in the list
-            next_event = self.eventList.removeNext();
+            next_event = self.eventList.removeNext()
 
             if next_event == None:
                 # we run out of events - exit - end of simulation
@@ -70,7 +70,7 @@ class NetworkSimulator:
             if self.trace >= 2:    
                 print("")
                 #print("EVENT #: "+ str(self.nMsgSim))
-                print("EVENT time: " + str(next_event.time));
+                print("EVENT time: " + str(next_event.time))
 
                 if (next_event.event_type == EventType.TIMERINTERRUPT):
                     print("Event type:  TIMERINTERRUPT ")
@@ -82,7 +82,7 @@ class NetworkSimulator:
                     print("Event type: " + str(next_event.event_type))
 
 
-                print("Event entity: " + str(next_event.entity));
+                print("Event entity: " + str(next_event.entity))
             
             #Advance the simulator's time to be the scheduled time of the next event
             self.time = next_event.time
@@ -107,7 +107,7 @@ class NetworkSimulator:
                         print("B: Receiving the data and sending the acknowledgement " + next_event.packet.payload )
                     self.receiver.input(next_event.packet)
                 else:
-                    print("INTERNAL PANIC: Packet has arrived for unknown entity");
+                    print("INTERNAL PANIC: Packet has arrived for unknown entity")
             elif next_event.event_type == EventType.FROMAPP:
 
                     nextMessage = ''
@@ -144,29 +144,29 @@ class NetworkSimulator:
         next_event = Event(self.time + x, EventType.FROMAPP, A)
     
         #Add the newly instantiated Event to the EventList
-        self.eventList.add(next_event);
+        self.eventList.add(next_event)
     
         # Increment the message counter
         self.nMsgSim += 1
         
         if self.trace >= 2:
-            print("generateNextArrival(): time is " + str(self.time));
-            print("generateNextArrival(): future time for " + "event " + str(next_event.event_type) + " at entity " + str(next_event.entity) + " will be " + str(next_event.time));
+            print("generateNextArrival(): time is " + str(self.time))
+            print("generateNextArrival(): future time for " + "event " + str(next_event.event_type) + " at entity " + str(next_event.entity) + " will be " + str(next_event.time))
     
 
     def startTimer(self, entity, increment):
         if self.trace >= 1:
             print("startTimer: starting timer at " + str(self.time))
 
-        t = self.eventList.removeTimer(entity);
+        t = self.eventList.removeTimer(entity)
         #t = self.eventList.removeTimer(AorB);
 
         if (t != None):
             print("startTimer: Warning: Attempting to start a timer that is already running")
             self.eventList.add(t)
         else:
-            timer_event = Event(self.time + increment, EventType.TIMERINTERRUPT, entity);
-            self.eventList.add(timer_event);
+            timer_event = Event(self.time + increment, EventType.TIMERINTERRUPT, entity)
+            self.eventList.add(timer_event)
 
 
     def stopTimer(self, entity):
@@ -205,13 +205,13 @@ class NetworkSimulator:
             if self.trace >= 1:
                 print("entity = " + str(entity))
                 print("udtSend: Warning: invalid packet sender")
-            return;
+            return
 
         #Simulate losses by doing nothing
         if (random.random() < self.lossProb): 
             if self.trace >= 1:
                 print("udtSend: SIMULATING PACKET LOSS")
-            return;
+            return
     
         #Simulate corruption
         if (random.random() < self.corruptProb):
@@ -253,7 +253,7 @@ class NetworkSimulator:
         if self.trace >=2 :
             print("udtSend: Scheduling arrival on other side: at time   " + str(arrivalTime))
 
-        arrival = Event(arrivalTime, EventType.FROMNETWORK, destination, packet);
+        arrival = Event(arrivalTime, EventType.FROMNETWORK, destination, packet)
         self.eventList.add(arrival)
         
 

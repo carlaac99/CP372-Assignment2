@@ -7,21 +7,24 @@ from common import *
 import sys
 class receiver:
     ACK = 0
-    SEQ = 0;
-    #expectedSeqNum 
+    SEQ = 0
+    expectedSeqNum = 0
     
     def isCorrupted(self, packet):
         #  Check if a received packet has been corrupted during transmission.
         #Return true if computed checksum is different than packet checksum.
-        return
+
+        return 
    
     def isDuplicate(self, packet):
         #check if packet sequence number is the same as expected sequence number
-        return
+
+        return 
     
     def getNextExpectedSeqNum(self):
         #Use modulo-2 arithmetic to ensure sequence number is 0 or 1.
-        return
+
+        return self.getNextExpectedSeqNum + 1
     
     
     def __init__(self, entityName, ns):

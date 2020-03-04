@@ -3,22 +3,60 @@ Created on Feb 24, 2020
 
 @author: Carla Castaneda
 '''
+import binascii
 A = 12345
 B = 67890
 TRACE = 1
-MAXDATASIZE = 20;   # This constant controls the maximum size of the buffer in a Message and in a Packet
+MAXDATASIZE = 20   # This constant controls the maximum size of the buffer in a Message and in a Packet
+
 
 def checksumCalc(payload):
     #The implemention of function that calculates checksum goes here
-    
-    return 
+    res = ''.join(format(i, 'b') for i in bytearray(payload, encoding ='utf-8'))
+    while len(res) < 16:
+        res = '0' + res
 
+    #default will change later
+    check = "0000000000000000"
+    list1 = [int(x) for x in str(res)] 
+    list2 = [int(x) for x in str(check)]
+
+    result = ""
+    carry = 0
+    
+    i = 15
+    while i > -1:
+        total = list1[i] + list2[i]
+    
+        if (carry == 1):
+            if (total == 1):
+                carry = 1
+                total = 0
+            elif (total == 0):
+                total == 1
+                carry = 0
+            else:
+                total = 1
+                carry = 1
+            
+        if(total == 2):
+            carry = 1
+            total = 0
+        
+        if total == 0:
+            total = "1"
+        else:
+            total = "0"
+        i = i - 1
+        result = str(total) + result
+
+        return result
 
 class Packet:
     def __init__(self, s, a, c, p=''):
         self.seqNum = s
         self.ackNum = a
-        self.checksum = c
+        self.checksum = c #checks if receiver got whole message
         self.payload = p
 
     def toStr(self):
@@ -81,7 +119,7 @@ class EventList:
             timerEvent = self.event_list[timerIndex]
             self.event_list.pop(timerIndex)
 
-        return timerEvent;
+        return timerEvent
 
     def getLastPacketTime(self, entityTo):
         time = 0.0
